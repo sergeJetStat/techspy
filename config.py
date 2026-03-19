@@ -7,6 +7,10 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 DB_PATH = os.getenv("DB_PATH", "techspy.db")
 MAX_CONCURRENT_CRAWLS = int(os.getenv("MAX_CONCURRENT_CRAWLS", "20"))
 CRAWL_TIMEOUT = int(os.getenv("CRAWL_TIMEOUT", "15"))
+
+# Use Playwright (headless browser) for crawling — catches dynamic/GTM scripts.
+# Set USE_PLAYWRIGHT=0 to fall back to HTTP-only mode (faster, less RAM).
+USE_PLAYWRIGHT = os.getenv("USE_PLAYWRIGHT", "1") != "0"
 CONFIDENCE_THRESHOLD = int(os.getenv("CONFIDENCE_THRESHOLD", "60"))
 
 # Model settings

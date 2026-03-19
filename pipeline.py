@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from rich.console import Console
 from rich.table import Table
 
-from config import MAX_CONCURRENT_CRAWLS, UNKNOWN_SIGNALS_THRESHOLD, ANTHROPIC_API_KEY
+from config import MAX_CONCURRENT_CRAWLS, UNKNOWN_SIGNALS_THRESHOLD, ANTHROPIC_API_KEY, USE_PLAYWRIGHT
 from db.store import get_db, init_db, upsert_site, update_site_crawled, save_detections, record_unknown_signal, get_stats
 from crawler.http_worker import fetch
 from crawler.extractor import extract_signals
@@ -32,20 +32,54 @@ class CrawlResult:
 async def crawl_and_store(domain: str, verbose: bool = True) -> CrawlResult:
     """Crawl a domain, detect technologies, persist results to the database."""
     t0 = time.monotonic()
-    fetch_result = await fetch(domain)
 
     detections_list: list[dict] = []
     detections_obj = []
     signals = {}
-    error = fetch_result.error
+    error = ""
+    final_url = f"https://{domain}"
+    status_code = 0
 
-    if not error and fetch_result.status_code > 0:
-        signals = extract_signals(
-            fetch_result.url, fetch_result.status_code,
-            fetch_result.headers, fetch_result.body
-        )
-        detections_obj = detect(signals)
-        detections_list = detections_to_dict(detections_obj)
+    if USE_PLAYWRIGHT:
+        # ── Playwright: headless browser, catches GTM-loaded scripts ──────────
+        from crawler.playwright_worker import fetch_playwright, extract_signals_playwright
+        try:
+            pw_result = await fetch_playwright(domain)
+            error = pw_result.error
+            final_url = pw_result.url or final_url
+            status_code = pw_result.status_code
+            if not error and pw_result.status_code > 0:
+                signals = extract_signals_playwright(pw_result)
+                detections_obj = detect(signals)
+                detections_list = detections_to_dict(detections_obj)
+        except Exception as e:
+            error = str(e)
+        # Fallback to HTTP on Playwright failure
+        if error:
+            fetch_result = await fetch(domain)
+            error = fetch_result.error
+            final_url = fetch_result.url
+            status_code = fetch_result.status_code
+            if not error and fetch_result.status_code > 0:
+                signals = extract_signals(
+                    fetch_result.url, fetch_result.status_code,
+                    fetch_result.headers, fetch_result.body
+                )
+                detections_obj = detect(signals)
+                detections_list = detections_to_dict(detections_obj)
+    else:
+        # ── HTTP-only (fast, low RAM) ──────────────────────────────────────────
+        fetch_result = await fetch(domain)
+        error = fetch_result.error
+        final_url = fetch_result.url
+        status_code = fetch_result.status_code
+        if not error and fetch_result.status_code > 0:
+            signals = extract_signals(
+                fetch_result.url, fetch_result.status_code,
+                fetch_result.headers, fetch_result.body
+            )
+            detections_obj = detect(signals)
+            detections_list = detections_to_dict(detections_obj)
 
     # DNS detection runs independently (even on HTTP errors)
     try:
@@ -61,8 +95,8 @@ async def crawl_and_store(domain: str, verbose: bool = True) -> CrawlResult:
 
     result = CrawlResult(
         domain=domain,
-        url=fetch_result.url,
-        status_code=fetch_result.status_code,
+        url=final_url,
+        status_code=status_code,
         detections=detections_list,
         crawl_time=time.monotonic() - t0,
         error=error,
@@ -71,7 +105,7 @@ async def crawl_and_store(domain: str, verbose: bool = True) -> CrawlResult:
     db = await get_db()
     try:
         site_id = await upsert_site(db, domain)
-        await update_site_crawled(db, domain, fetch_result.status_code)
+        await update_site_crawled(db, domain, status_code)
 
         if detections_list:
             await save_detections(db, site_id, detections_list)
