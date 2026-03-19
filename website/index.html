@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechSpy — Technology Intelligence for Sales Teams</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0d14;
+      --surface: #111827;
+      --border:  #1f2937;
+      --accent:  #6366f1;
+      --accent2: #8b5cf6;
+      --green:   #10b981;
+      --text:    #f9fafb;
+      --muted:   #9ca3af;
+      --card:    #161d2e;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+      background: rgba(10, 13, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo span { color: var(--green); -webkit-text-fill-color: var(--green); }
+    nav ul {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--accent2) !important; }
+
+    /* ── HERO ────────────────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99,102,241,.12);
+      border: 1px solid rgba(99,102,241,.3);
+      color: #a5b4fc;
+      font-size: .8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+    .badge-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .6; transform: scale(1.3); }
+    }
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      max-width: 800px;
+      margin: 0 auto 24px;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, #6366f1, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 48px;
+    }
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(99,102,241,.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(99,102,241,.5); }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── TERMINAL DEMO ───────────────────────────────────────────────────── */
+    .demo-wrap {
+      max-width: 860px;
+      margin: 64px auto 0;
+      padding: 0 24px;
+    }
+    .terminal {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+    .term-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: #161b22;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .term-title { color: var(--muted); font-size: .8rem; margin-left: auto; margin-right: auto; }
+    .term-body {
+      padding: 20px 24px;
+      font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+      font-size: .85rem;
+      line-height: 1.9;
+    }
+    .term-body .prompt { color: var(--green); }
+    .term-body .cmd    { color: #e2e8f0; }
+    .term-body .out    { color: var(--muted); }
+    .term-body .hi     { color: #a78bfa; }
+    .term-body .ok     { color: var(--green); }
+    .term-body .dim    { color: #4b5563; }
+    .term-body .domain { color: #38bdf8; }
+    .term-body .tech   { color: #fbbf24; }
+
+    /* ── STATS BAR ───────────────────────────────────────────────────────── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      max-width: 800px;
+      margin: 80px auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .stat {
+      flex: 1;
+      min-width: 180px;
+      padding: 32px 24px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #6366f1, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+
+    /* ── FEATURES ────────────────────────────────────────────────────────── */
+    section { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .section-label {
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .section-sub { color: var(--muted); font-size: 1.1rem; max-width: 520px; margin-bottom: 56px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: border-color .2s, transform .2s;
+    }
+    .card:hover { border-color: rgba(99,102,241,.4); transform: translateY(-3px); }
+    .card-icon {
+      width: 44px; height: 44px;
+      background: rgba(99,102,241,.12);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    .card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .card p  { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+
+    /* ── HOW IT WORKS ────────────────────────────────────────────────────── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .step {
+      padding: 32px 28px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+    .step:last-child { border-right: none; }
+    .step-num {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(99,102,241,.2);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step p  { color: var(--muted); font-size: .88rem; }
+
+    /* ── TECHNOLOGIES LIST ───────────────────────────────────────────────── */
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .tech-tag {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      color: var(--muted);
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* ── PRICING ─────────────────────────────────────────────────────────── */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .price-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+    }
+    .price-card.featured {
+      border-color: var(--accent);
+      background: rgba(99,102,241,.06);
+      position: relative;
+    }
+    .popular-badge {
+      position: absolute;
+      top: -13px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 100px;
+      letter-spacing: .5px;
+    }
+    .plan-name { font-weight: 700; font-size: 1rem; color: var(--muted); margin-bottom: 8px; }
+    .plan-price {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+    }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+    .plan-desc { color: var(--muted); font-size: .88rem; margin-bottom: 28px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .plan-features li { display: flex; align-items: center; gap: 10px; font-size: .9rem; }
+    .plan-features li::before { content: '✓'; color: var(--green); font-weight: 700; }
+    .btn-full { width: 100%; justify-content: center; }
+
+    /* ── CTA BANNER ──────────────────────────────────────────────────────── */
+    .cta-banner {
+      max-width: 1100px;
+      margin: 0 auto 100px;
+      padding: 0 24px;
+    }
+    .cta-inner {
+      background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(139,92,246,.1));
+      border: 1px solid rgba(99,102,241,.3);
+      border-radius: 20px;
+      padding: 64px 48px;
+      text-align: center;
+    }
+    .cta-inner h2 { margin-bottom: 16px; }
+    .cta-inner p { color: var(--muted); max-width: 480px; margin: 0 auto 36px; }
+
+    /* ── FOOTER ──────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      nav { padding: 14px 20px; }
+      nav ul { display: none; }
+      h1 { font-size: 2rem; }
+      .stats { flex-direction: column; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:last-child { border-bottom: none; }
+      .step { border-right: none; border-bottom: 1px solid var(--border); }
+      .step:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Tech<span>Spy</span></div>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="/search.html" class="nav-cta">Search leads →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Now with AI-powered lead generation
+  </div>
+  <h1>Know the tech stack of <em>every website</em> on the internet</h1>
+  <p>TechSpy scans millions of domains to detect the technologies they use — then turns that intelligence into targeted sales leads.</p>
+  <div class="cta-group">
+    <a href="/search.html" class="btn btn-primary">Search leads →</a>
+    <a href="#how" class="btn btn-secondary">See how it works</a>
+  </div>
+
+  <!-- Terminal demo -->
+  <div class="demo-wrap">
+    <div class="terminal">
+      <div class="term-header">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span class="term-title">techspy — leads</span>
+      </div>
+      <div class="term-body">
+        <div><span class="prompt">$</span> <span class="cmd">techspy leads "WordPress sites without Google Analytics, using Stripe"</span></div>
+        <div class="out dim">→ list_technologies()  → query_sites(must_have=["WordPress","Stripe"], must_not_have=["Google Analytics 4"])</div>
+        <div class="ok">  Found 43 matching sites</div>
+        <br>
+        <div>
+          <span class="domain">acmecorp.io           </span>
+          <span class="tech">WordPress  Stripe  WooCommerce  Nginx</span>
+        </div>
+        <div>
+          <span class="domain">getbrixly.com         </span>
+          <span class="tech">WordPress  Stripe  jQuery  PHP</span>
+        </div>
+        <div>
+          <span class="domain">shopform.co           </span>
+          <span class="tech">WordPress  Stripe  Cloudflare  React</span>
+        </div>
+        <div class="dim">  … 40 more</div>
+        <br>
+        <div class="out">Exported → <span class="hi">exports/leads_20260317_143022.csv</span></div>
+        <div class="ok">✓ 43 leads ready for outreach</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num" id="statTechs">128+</div>
+    <div class="stat-label">Detected technologies</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="statSites">747+</div>
+    <div class="stat-label">Domains indexed</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="statDet">3k+</div>
+    <div class="stat-label">Technology detections</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">AI</div>
+    <div class="stat-label">Claude-powered agents</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2>Everything you need for tech-led sales</h2>
+  <p class="section-sub">From raw crawl data to export-ready leads in seconds — powered by an autonomous AI pipeline.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <h3>Deep fingerprint detection</h3>
+      <p>128+ technology fingerprints across CMS, analytics, CDN, e-commerce, frameworks, and more. Matches HTTP headers, HTML patterns, cookies, script URLs, and meta tags.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤖</div>
+      <h3>AI Lead Generation Agent</h3>
+      <p>Describe your ideal prospect in plain English. The agent translates it into precise SQL filters, finds matching domains, and exports a ready-to-import CSV or JSON.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Async bulk crawling</h3>
+      <p>Crawl thousands of domains in parallel with configurable concurrency. Handles redirects, TLS fingerprinting, and bot detection evasion automatically.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Market intelligence</h3>
+      <p>See technology penetration rates across your target market. Ask "what % of SaaS sites use Stripe?" and get an instant answer with ranked stats.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <h3>Continuous re-crawling</h3>
+      <p>The AI Scheduler Agent prioritizes re-crawl frequency based on domain importance and change velocity. Your data stays fresh automatically.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <h3>Self-improving fingerprints</h3>
+      <p>When the Detection Agent encounters unknown signals, it researches and proposes new fingerprints. The database grows smarter with every crawl.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How it works</div>
+  <h2>Four steps from URL to leads</h2>
+  <p class="section-sub">A fully automated pipeline — just add domains and describe what you're looking for.</p>
+
+  <div class="how-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Crawl & extract</h3>
+      <p>Async HTTP fetcher downloads pages, capturing headers, HTML, cookies, and script paths at up to 50 concurrent requests.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Fingerprint matching</h3>
+      <p>Deterministic engine scores each detected pattern. Confidence ≥60 triggers a detection. Version strings are extracted where available.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>AI enrichment</h3>
+      <p>Claude-powered agents research unknown signals and propose new fingerprints. Each agent works autonomously using tool-calling loops.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Natural language leads</h3>
+      <p>Query in plain English. The Lead Agent filters the database with AND / OR / NOT logic and exports CSV or JSON for your CRM.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGIES COVERAGE -->
+<section>
+  <div class="section-label">Coverage</div>
+  <h2>128+ technologies detected</h2>
+  <p class="section-sub">Spanning every layer of the modern web stack — and growing with every crawl.</p>
+
+  <div class="tech-grid">
+    <span class="tech-tag">WordPress</span>
+    <span class="tech-tag">Shopify</span>
+    <span class="tech-tag">Next.js</span>
+    <span class="tech-tag">React</span>
+    <span class="tech-tag">Vue.js</span>
+    <span class="tech-tag">Angular</span>
+    <span class="tech-tag">Nuxt.js</span>
+    <span class="tech-tag">Gatsby</span>
+    <span class="tech-tag">Cloudflare</span>
+    <span class="tech-tag">AWS CloudFront</span>
+    <span class="tech-tag">Fastly</span>
+    <span class="tech-tag">Akamai</span>
+    <span class="tech-tag">Google Analytics 4</span>
+    <span class="tech-tag">Yandex.Metrica</span>
+    <span class="tech-tag">Mixpanel</span>
+    <span class="tech-tag">Amplitude</span>
+    <span class="tech-tag">Segment</span>
+    <span class="tech-tag">Hotjar</span>
+    <span class="tech-tag">Stripe</span>
+    <span class="tech-tag">PayPal</span>
+    <span class="tech-tag">WooCommerce</span>
+    <span class="tech-tag">Magento</span>
+    <span class="tech-tag">Nginx</span>
+    <span class="tech-tag">Apache</span>
+    <span class="tech-tag">HubSpot</span>
+    <span class="tech-tag">Intercom</span>
+    <span class="tech-tag">Salesforce</span>
+    <span class="tech-tag">Recaptcha</span>
+    <span class="tech-tag">Tailwind CSS</span>
+    <span class="tech-tag">Bootstrap</span>
+    <span class="tech-tag">jQuery</span>
+    <span class="tech-tag">Node.js</span>
+    <span class="tech-tag">PHP</span>
+    <span class="tech-tag">Ruby on Rails</span>
+    <span class="tech-tag">Django</span>
+    <span class="tech-tag">Vercel</span>
+    <span class="tech-tag">Netlify</span>
+    <span class="tech-tag">+ 90 more →</span>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2>Simple, usage-based pricing</h2>
+  <p class="section-sub">Start free. Scale as you grow. No per-seat fees.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price">$0<span>/mo</span></div>
+      <div class="plan-desc">Perfect for trying TechSpy and small prospecting lists.</div>
+      <ul class="plan-features">
+        <li>1,000 domains crawled/mo</li>
+        <li>50 lead exports/mo</li>
+        <li>20 technologies detected</li>
+        <li>CSV export</li>
+        <li>Community support</li>
+      </ul>
+      <a href="#" class="btn btn-secondary btn-full">Start free</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="popular-badge">MOST POPULAR</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$49<span>/mo</span></div>
+      <div class="plan-desc">For sales teams and agencies running regular prospecting campaigns.</div>
+      <ul class="plan-features">
+        <li>50,000 domains crawled/mo</li>
+        <li>Unlimited lead exports</li>
+        <li>128+ technologies</li>
+        <li>CSV + JSON export</li>
+        <li>AI Lead Generation Agent</li>
+        <li>Market intelligence reports</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#" class="btn btn-primary btn-full">Start Pro trial →</a>
+    </div>
+
+    <div class="price-card">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price">Custom</div>
+      <div class="plan-desc">For large teams needing full database access, custom crawlers, and SLA.</div>
+      <ul class="plan-features">
+        <li>Unlimited crawling</li>
+        <li>Full database API access</li>
+        <li>Custom technology fingerprints</li>
+        <li>Webhook integrations</li>
+        <li>Dedicated support + SLA</li>
+        <li>On-premise deployment</li>
+      </ul>
+      <a href="#" class="btn btn-secondary btn-full">Contact sales</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="cta-inner">
+    <h2>Ready to find your next 100 customers?</h2>
+    <p>Start crawling in minutes. No credit card required for the free tier.</p>
+    <div class="cta-group">
+      <a href="#" class="btn btn-primary">Get started free →</a>
+      <a href="#" class="btn btn-secondary">Book a demo</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Tech<span>Spy</span></div>
+  <div style="display:flex;gap:24px">
+    <a href="#">Docs</a>
+    <a href="#">API</a>
+    <a href="#">Blog</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+  </div>
+  <div>© 2026 TechSpy. Built with Claude.</div>
+</footer>
+
+<script>
+fetch('/api/stats').then(r => r.json()).then(d => {
+  const f = n => n >= 1000 ? (n/1000).toFixed(1) + 'k' : String(n);
+  document.getElementById('statTechs').textContent = d.technologies + '+';
+  document.getElementById('statSites').textContent = f(d.sites) + '+';
+  document.getElementById('statDet').textContent = f(d.detections) + '+';
+}).catch(() => {});
+</script>
+</body>
+</html>

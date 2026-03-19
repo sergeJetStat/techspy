@@ -1,0 +1,118 @@
+# E-commerce
+shopify.com
+bigcommerce.com
+woocommerce.com
+etsy.com
+ebay.com
+wayfair.com
+zappos.com
+rei.com
+patagonia.com
+gymshark.com
+allbirds.com
+glossier.com
+fashionnova.com
+myprotein.com
+asos.com
+
+# SaaS / Dev Tools
+github.com
+gitlab.com
+vercel.com
+netlify.com
+supabase.com
+linear.app
+notion.so
+airtable.com
+zapier.com
+figma.com
+miro.com
+loom.com
+retool.com
+posthog.com
+sentry.io
+
+# Payments / Fintech
+stripe.com
+braintreepayments.com
+paddle.com
+chargebee.com
+plaid.com
+wise.com
+brex.com
+mercury.com
+
+# CMS / Website Builders
+wordpress.com
+wix.com
+squarespace.com
+ghost.org
+webflow.com
+cargo.site
+
+# Marketing / CRM / Email
+hubspot.com
+mailchimp.com
+klaviyo.com
+activecampaign.com
+sendinblue.com
+convertkit.com
+intercom.com
+drift.com
+crisp.chat
+
+# Analytics / Monitoring
+mixpanel.com
+amplitude.com
+segment.com
+heap.io
+plausible.io
+datadog.com
+newrelic.com
+logrocket.com
+hotjar.com
+fullstory.com
+
+# Media / Publishing
+medium.com
+substack.com
+techcrunch.com
+theverge.com
+wired.com
+dev.to
+smashingmagazine.com
+css-tricks.com
+
+# Consumer Tech
+spotify.com
+netflix.com
+airbnb.com
+uber.com
+doordash.com
+discord.com
+reddit.com
+dropbox.com
+zoom.us
+slack.com
+
+# Hosting / Infrastructure
+digitalocean.com
+fly.io
+render.com
+railway.app
+cloudflare.com
+
+# Auth / Security
+auth0.com
+okta.com
+1password.com
+cloudflare.com
+
+# AI / ML
+openai.com
+anthropic.com
+huggingface.co
+replicate.com
+cursor.sh
+perplexity.ai
+mistral.ai

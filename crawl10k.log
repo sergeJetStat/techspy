@@ -1,0 +1,133 @@
+Loaded 10000 domains from domains10k.txt
+
+Crawling 10000 domains (concurrency=30)
+C:\Users\yndxs\techspy\crawler\extractor.py:33: XMLParsedAsHTMLWarning: It looks like you're using an HTML parser to parse an XML document.
+
+Assuming this really is an XML document, what you're doing might work, but you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the Python package 'lxml' installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+
+If you want or need to use an HTML parser on this document, you can make this warning go away by filtering it. To do that, run this code before calling the BeautifulSoup constructor:
+
+    from bs4 import XMLParsedAsHTMLWarning
+    import warnings
+
+    warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
+
+  soup = BeautifulSoup(html, "lxml")
+
+Batch Summary
+  Crawled: 8132 ok, 1868 errors
+  Detections: 25792 technologies found
+  Avg crawl time: 1.65s
+
+>> 1000 unknown signals accumulated -- triggering Detection Agent
+Detection Agent - analyzing 10 unknown signals
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> get_signal_details
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> search_similar_domains
+  -> propose_fingerprint
+  -> Proposed: Google Web Server 
+  -> propose_fingerprint
+  -> Proposed: Yandex Ads 
+  -> propose_fingerprint
+  -> Proposed: Qrator 
+  -> propose_fingerprint
+  -> Proposed: ExoClick 
+  -> propose_fingerprint
+  -> Proposed: Nuxt.js 
+  -> propose_fingerprint
+  -> Proposed: ASP.NET 
+  -> propose_fingerprint
+  -> Proposed: DDoS-Guard 
+  -> propose_fingerprint
+  -> Proposed: Jeeng 
+  -> propose_fingerprint
+  -> Proposed: Amazon Publisher Services 
+  -> save_fingerprint_draft
+  OK Saved draft: Google Web Server
+  -> save_fingerprint_draft
+  OK Saved draft: Yandex Ads
+  -> save_fingerprint_draft
+  OK Saved draft: Qrator
+  -> save_fingerprint_draft
+  OK Saved draft: ExoClick
+  -> save_fingerprint_draft
+  OK Saved draft: Nuxt.js
+  -> save_fingerprint_draft
+  OK Saved draft: ASP.NET
+  -> save_fingerprint_draft
+  OK Saved draft: DDoS-Guard
+  -> save_fingerprint_draft
+  OK Saved draft: Jeeng
+  -> save_fingerprint_draft
+  OK Saved draft: Amazon Publisher Services
+  -> finish_review
+OK Detection Agent done: ## Batch Review Complete ? 10 Signals Investigated, 9 
+Fingerprints Proposed
+
+### Summary
+Investigated 10 unknown signals and proposed **9 high-confidence fingerprints**
+across 5 technology categories. Signal #2 (Google XJS script) was skipped as 
+it's a dynamic companion to signal #1 (GWS) and too volatile/specific to 
+fingerprint independently.
+
+### Fingerprints by Category:
+
+**?? Web Servers (1)**
+| Tech | Signal | Confidence | Domains |
+|------|--------|------------|---------|
+| Google Web Server | `server: gws` | High | google.vg (190 hits) |
+
+**? Frameworks (2)**
+| Tech | Signal | Confidence | Domains |
+|------|--------|------------|---------|
+| Nuxt.js | `x-powered-by: Nuxt` | High | toast.com (30 hits) |
+| ASP.NET | `x-powered-by: ASP.NET` | High | atcpulsa.life (29 hits) |
+
+**? Advertising (3)**
+| Tech | Signal | Confidence | Domains |
+|------|--------|------------|---------|
+| Yandex Ads | `yandex.ru/ads/system/context.js` | High | litboom.ru (51 hits) 
+|
+| ExoClick | `a.magsrv.com/ad-provider.js` | High | kissjav.com (35 hits) |
+| Amazon Publisher Services | `amazon-adsystem.com/aax2/apstag.js` | High | 
+typingtest.com (26 hits) |
+
+**?? Security/CDN (2)**
+| Tech | Signal | Confidence | Domains |
+|------|--------|------------|---------|
+| Qrator | `server: QRATOR` | High | lenta.com (44 hits) |
+| DDoS-Guard | `server: ddos-guard` | High | playerok.com (27 hits) |
+
+**? Marketing/Widgets (1)**
+| Tech | Signal | Confidence | Domains |
+|------|--------|------------|---------|
+| Jeeng | `applets.ebxcdn.com/ebx.js` | High | esakal.com, newsbeast.gr (34 
+hits combined) |
+
+### Key Observations:
+- **All 9 proposed fingerprints are high confidence** ? each uses a clear, 
+unambiguous signal (exact header value or specific script URL).
+- **Jeeng** had the strongest cross-domain validation, appearing on 2 separate 
+news publisher domains.
+- **Nuxt.js** correctly implies **Vue.js** as a dependency.
+- The security/CDN category (Qrator, DDoS-Guard) represents Russian-market DDoS
+protection services commonly seen on CIS-region websites.
+- Signal #2 (Google XJS script with massive dynamic parameters) was 
+intentionally excluded ? it's an unstable, auto-generated URL specific to 
+Google Search rendering.
+  Proposed 9 fingerprints. Check fingerprint_drafts.json for review.
